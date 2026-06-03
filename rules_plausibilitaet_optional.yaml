@@ -1,0 +1,62 @@
+version: 1
+profile: "Plausibilitaets-Erweiterung (kein direkter FHB-Verweis)"
+applies_to: ["IfcWall"]
+# Diese Regeln sind NICHT direkt aus ASTRA FHB T/G abgeleitet. Sie ergaenzen
+# das ASTRA-Set um geometrische Plausibilitaetspruefungen aus SIA-Normen,
+# Bautoleranzen und strukturellen Erwartungen. Sie werden NICHT als Default
+# geladen, sondern nur ueber --rules rules_plausibilitaet_optional.yaml
+# explizit aktiviert. Severity bewusst auf 'warn'.
+rules:
+  - id: foundation_min_thickness
+    label: "Fundament Mindeststaerke (Plausibilitaet, SIA-262-naehe)"
+    target: "foundation_thickness_m"
+    op: ">="
+    threshold: 0.40
+    unit: "m"
+    source: "non-ASTRA - SIA 262 Plausibilitaet (kein direkter FHB-Wert in 24001-15101)"
+    severity: "warn"
+
+  - id: wall_min_residual_thickness_at_niche
+    label: "Restwandstaerke am Nischenboden (Plausibilitaet)"
+    target: "thickness_at_niche.min_global"
+    op: ">="
+    threshold: 0.20
+    unit: "m"
+    source: "non-ASTRA - Plausibilitaet, abgeleitet aus SIA 262 (kein FHB-Wert)"
+    severity: "warn"
+
+  - id: niche_max_density
+    label: "Maximale Nischen-Dichte pro Laufmeter (Plausibilitaet)"
+    target: "niches_per_meter"
+    op: "<="
+    threshold: 1.5
+    unit: "1/m"
+    source: "non-ASTRA - Plausibilitaet (kein direkter FHB-Verweis)"
+    severity: "warn"
+
+  - id: foundation_min_overhang
+    label: "Fundament-Mindestueberstand links/rechts (Plausibilitaet)"
+    target: "min_foundation_overhang"
+    op: ">="
+    threshold: 0.10
+    unit: "m"
+    source: "non-ASTRA - Strukturelle Plausibilitaet (kein direkter FHB-Verweis)"
+    severity: "warn"
+
+  - id: stem_centered_on_foundation
+    label: "Stem zentriert auf Fundament (Plausibilitaet)"
+    target: "context.internal.stem_centered_on_foundation"
+    op: "=="
+    threshold: 1
+    unit: ""
+    source: "non-ASTRA - Strukturelle Plausibilitaet (kein direkter FHB-Verweis)"
+    severity: "warn"
+
+  - id: min_clearance_to_neighbor
+    label: "Mindestabstand zu Nachbarbauteil (ASTRA-Bautoleranz, generisch)"
+    target: "scene.distances[*].min_distance_m"
+    op: ">="
+    threshold: 0.30
+    unit: "m"
+    source: "non-ASTRA - Plausibilitaet (ASTRA-Bautoleranz generisch, kein FHB 24001-15101-Wert)"
+    severity: "warn"

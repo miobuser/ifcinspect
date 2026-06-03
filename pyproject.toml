@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ifcinspect"
+version = "0.4.41"
+description = "Deterministic geometric face-classification of formwork inserts (Schaleinlagen) in semantics-free IFC retaining walls."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Mio Buser", email = "mio.buser@baghira.ch" },
+]
+keywords = ["IFC", "BIM", "geometry", "niche", "Schaleinlage", "ASTRA"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: OS Independent",
+]
+
+# Mandatory runtime deps. Live pipeline does not use voxel-remesh
+# fallbacks; non-watertight inputs are skipped with prep_failed
+# instead of routed through native-only repair libraries.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "trimesh>=4.0",
+    "ifcopenshell>=0.8.0",
+    "shapely>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Visualisation extras for the localhost web_viewer / CLI preview.
+desktop = [
+    "matplotlib>=3.7",
+    "pyvista>=0.40",
+]
+
+[tool.hatch.build.targets.wheel]
+# IfcInspect ships a FLAT script collection (no package dir) -- the
+# top-level modules ARE the API. Ship every module the niche pipeline
+# imports + the ``detect`` orchestrator + the IFC I/O helpers.
+# Leading "/" anchors each pattern to the repo root (hatch uses gitignore-style
+# globs); without it a bare "context.py" also matches backup copies such as
+# _perf_baseline_backup/context.py and packs them into the wheel.
+include = [
+    "/ifcinspect.py",
+    "/niche_brep.py",
+    "/ifc_io.py",
+    "/webifc_mesh.py",
+    "/context.py",
+    "/distances.py",
+    "/adjacency.py",
+    "/metrics.py",
+    "/rules.py",
+    "/report.py",
+    "/confidence.py",
+]
+
+[tool.pytest.ini_options]
+# Keep collection robust: never descend into local backup/build/web trees.
+# Without this, duplicate test basenames in _backup_* folders (no __init__.py)
+# abort collection with an "import file mismatch" error.
+norecursedirs = ["_backup_*", "_perf_baseline_backup", "dist", "build", "web", "node_modules", ".git", ".venv"]

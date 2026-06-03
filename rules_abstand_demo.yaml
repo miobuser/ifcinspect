@@ -1,0 +1,39 @@
+version: 1
+profile: "Abstands-Demo (typgefilterte Distanzregeln) - PLATZHALTER"
+applies_to: ["IfcWall"]
+# ----------------------------------------------------------------------------
+# OPTIONALES Beispiel-Ruleset fuer TYP-GEFILTERTE L7-Distanzregeln.
+#
+# WICHTIG: Die Schwellwerte hier sind PLATZHALTER. Es gibt KEINE ASTRA-FHB-Norm
+# (24001-15101) fuer einen Wand<->Strasse- bzw. Wand<->Wand-Mindestabstand. Die
+# Werte sind frei gewaehlte Demonstrationswerte und MUESSEN projektspezifisch
+# gesetzt werden. Dieses Set ist bewusst NICHT im strikten FHB-Default-Set
+# enthalten und wird nur explizit geladen:
+#
+#     python -m <cli> ... --rules rules_abstand_demo.yaml
+#
+# Filter-Syntax (siehe rules.py Docstring): die eckige Klammer waehlt Paare aus
+# der scene.distances-Liste. `key~=value` = case-insensitive Substring-Match
+# (robust gegen IfcWall/IfcRetainingWall bzw. IfcRoad/IfcCourse/IfcPavement).
+# Mehrere Bedingungen = UND, symmetrisch (Rollen from/to vertauschbar).
+# Bleibt nach Filter kein Paar uebrig -> SKIP (nicht FAIL), z.B. wenn das Modell
+# gar kein Strassen-Element enthaelt.
+# ----------------------------------------------------------------------------
+rules:
+  - id: min_clearance_wall_road
+    label: "Mindestabstand Stuetzmauer-Strasse"
+    target: "scene.distances[from_type~=Wall, to_type~=Road].min_distance_m:min"
+    op: ">="
+    threshold: 0.50
+    unit: "m"
+    source: "Beispiel/Platzhalter - projektspezifisch (KEINE ASTRA-FHB-Norm)"
+    severity: "warn"
+
+  - id: min_clearance_wall_wall
+    label: "Mindestabstand Stuetzmauer-Stuetzmauer"
+    target: "scene.distances[from_type~=Wall, to_type~=Wall].min_distance_m:min"
+    op: ">="
+    threshold: 0.20
+    unit: "m"
+    source: "Beispiel/Platzhalter - projektspezifisch (KEINE ASTRA-FHB-Norm)"
+    severity: "warn"

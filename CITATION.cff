@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "IfcInspect"
+type: software
+authors:
+  - family-names: "Buser"
+    given-names: "Mio"
+year: 2026
+version: "0.4.39"
+url: "https://ifcinspect.vercel.app"
+license: MIT
+abstract: "Deterministische, geometrische Prüfung von ASTRA-Stützmauern aus semantikfreien IFC-Modellen mittels Flächenklassifikation (K0–K6) und Regelprüfung gegen den ASTRA-FHB-Regelsatz."
+keywords:
+  - IFC
+  - BIM
+  - geometry
+  - face-classification
+  - Schaleinlage
+  - ASTRA
+  - Stützmauer

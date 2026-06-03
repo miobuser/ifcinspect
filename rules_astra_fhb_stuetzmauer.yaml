@@ -1,0 +1,55 @@
+version: 1
+profile: "ASTRA FHB T/G - Stuetzmauer 24001-15101 V3.02"
+applies_to: ["IfcWall"]
+# Strictly ASTRA-FHB-derived rules. Each rule cites a verbatim source in
+# Merkblatt 24001-15101 "Stuetzbauwerke Allgemeines" V3.02 (01.01.2025) §3
+# "Generell" S. 2. Plausibilitaets-Erweiterungen (SIA, Bautoleranz) sind in
+# `rules_plausibilitaet_optional.yaml` ausgelagert.
+rules:
+  - id: crown_min_width
+    label: "Mauerkrone Mindestbreite (FHB: >= 300 mm)"
+    target: "crown_width_m"
+    op: ">="
+    threshold: 0.30
+    unit: "m"
+    source: "ASTRA FHB T/G, Merkblatt 24001-15101 V3.02, S. 2 (Kap. 3 Generell): 'mindestens 300 mm breit'"
+    severity: "fail"
+    applies_to: ["*"]
+
+  - id: wall_min_nominal_thickness
+    label: "Wand-Mindestbauteilstaerke (FHB: >= 300 mm)"
+    target: "thickness.min"
+    op: ">="
+    threshold: 0.30
+    unit: "m"
+    source: "ASTRA FHB T/G, Merkblatt 24001-15101 V3.02, S. 2 (Kap. 3 Generell): 'Mindestbauteilstaerke (Wandstaerke) von 300 mm ist stets einzuhalten'"
+    severity: "fail"
+    applies_to: ["*"]
+
+  - id: crown_slope_against_hill
+    label: "Kronenneigung 3% zur Erdseite / weg von der Strasse (FHB: gegen Hang)"
+    # Hauptwert = BETRAG des Kronen-Quergefaelles (richtungsfrei): prueft, ob
+    # die Krone ueberhaupt das geforderte ~3 % Gefaelle hat. Die Richtung
+    # ("gegen den Hang" / zur Luftseite) wird vom generischen Kontext-Teilcheck
+    # (rules._CONTEXT_CHECKS["crown_slope_against_hill"]) aus context.external
+    # bewertet: Terrain + eindeutige Erdseite -> Richtung geprueft (pass/warn);
+    # kein Terrain / Erdseite unbestimmt -> Status 'info' (Betrag ok, Richtung
+    # nicht pruefbar).
+    target: "crown_slope_abs_percent"
+    op: "=="
+    threshold: 3.0
+    tolerance: 0.5
+    unit: "percent"
+    source: "ASTRA FHB T/G, Merkblatt 24001-15101 V3.02, S. 2 (Kap. 3 Generell): 'Die Mauerkrone ist 3 %, in der Regel gegen den Hang, geneigt'"
+    severity: "warn"
+    applies_to: ["*"]
+
+  - id: anzug_max
+    label: "Anzug max 1:10 (FHB: 'Neigung der Stuetzmauer von 10:1 wird empfohlen')"
+    target: "anzug_ratio"
+    op: "<="
+    threshold: 0.10
+    unit: "ratio"
+    source: "ASTRA FHB T/G, Merkblatt 24001-15101 V3.02, S. 2 (Kap. 3 Generell): 'Eine Neigung der Stuetzmauer von 10:1 wird empfohlen'"
+    severity: "warn"
+    applies_to: ["*"]

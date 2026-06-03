@@ -1,0 +1,45 @@
+version: 1
+profile: "Confidence-Gating Demo (NicheDetector)"
+applies_to: ["IfcWall"]
+# ---------------------------------------------------------------------------
+# DEMONSTRATION des optionalen Regel-Felds `min_confidence` (+ optional
+# `confidence_target`).
+#
+# WIRKUNG: Nach der normalen Auswertung wird die Confidence des geprueften
+# Werts gegen `min_confidence` gehalten:
+#   * Confidence < min_confidence  -> Ergebnis-Status wird (severity-unabhaengig)
+#                                     auf WARN herabgestuft. Selbst ein technisch
+#                                     erfuelltes PASS wird zur WARN, weil der Wert
+#                                     selbst zu unsicher ist.
+#   * Confidence nicht ermittelbar -> SKIP (kein blinder PASS/FAIL).
+#   * ohne min_confidence          -> unveraendertes Verhalten (abwaertskompatibel).
+#
+# `confidence_target` (Dot-Path zu confidence.*.score) ist optional; fehlt es,
+# wird der passende Score heuristisch aus `target` abgeleitet
+# (crown_width_* -> confidence.crown_width, thickness.* -> confidence.thickness,
+#  *slope*/longitudinal -> confidence.slope, sonst confidence.overall).
+#
+# Aufruf:  --rules rules_confidence_demo.yaml
+# ---------------------------------------------------------------------------
+rules:
+  - id: crown_min_width_confident
+    label: "Mauerkrone Mindestbreite (nur bei verlässlicher Geometrie)"
+    target: "crown_width_min_m"
+    op: ">="
+    threshold: 0.30
+    unit: "m"
+    source: "ASTRA FHB T/G 24001-15101 V3.02, S.2: 'mindestens 300 mm breit' — Confidence-gegated"
+    severity: "fail"
+    min_confidence: 0.6
+    # confidence_target weggelassen -> heuristisch confidence.crown_width.score
+
+  - id: wall_min_thickness_confident
+    label: "Wand-Mindestbauteilstärke (Confidence-gegated)"
+    target: "thickness.min"
+    op: ">="
+    threshold: 0.30
+    unit: "m"
+    source: "ASTRA FHB T/G 24001-15101 V3.02, S.2: 'Mindestbauteilstärke 300 mm' — Confidence-gegated"
+    severity: "fail"
+    min_confidence: 0.6
+    confidence_target: "confidence.thickness.score"
