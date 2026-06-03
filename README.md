@@ -147,8 +147,7 @@ IfcInspect ist der Implementierungskern einer Bachelor-Thesis (BSc) an der
 **Berner Fachhochschule (BFH), 2026**. Thema ist die geometrische IFC-Validierung
 von ASTRA-Stützmauern mit Schwerpunkt auf der Flächenklassifikation.
 
-Das Thesis-Dokument ist nicht Teil dieses Repositories.
-Link: _folgt / Platzhalter._
+Das Thesis-Dokument ist nicht Teil dieses Repositories und wird nicht verlinkt.
 
 ---
 
