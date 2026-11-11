@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "pdfmake": "^0.2.23",
     "three": "^0.184.0",
     "web-ifc": "^0.0.75"

@@ -1,0 +1,64 @@
+# Vercel Web Analytics Installation Report
+
+## Summary
+Successfully installed and configured Vercel Web Analytics for the ifcinspect project.
+
+## Changes Made
+
+### 1. Installed @vercel/analytics Package
+- Added `@vercel/analytics` version 2.0.1 to dependencies
+- Updated package-lock.json with the new dependency and its 76 transitive dependencies
+
+### 2. Integrated Analytics into Application
+Modified `src/main.ts` to initialize Vercel Web Analytics:
+- Added import: `import { inject } from "@vercel/analytics"`
+- Called `inject()` at the application entry point to start tracking page views
+- Placed initialization early in the file, before UI mounting, to ensure analytics tracking starts immediately
+
+## Implementation Details
+
+### Framework Detection
+- Identified the project as a **Vite + TypeScript** (vanilla JS) project
+- Used the vanilla JavaScript approach with the `inject()` function instead of React components
+- Followed the official Vercel Analytics documentation from https://vercel.com/docs/analytics/quickstart
+
+### File Locations
+**Modified:**
+- `/web/package.json` - Added @vercel/analytics to dependencies
+- `/web/package-lock.json` - Updated with new dependency tree
+- `/web/src/main.ts` - Added analytics initialization
+
+### Code Changes
+The analytics initialization was added at the top of main.ts, right after imports and before any UI initialization. This ensures:
+1. Analytics starts tracking as early as possible
+2. No page views are missed
+3. The injection happens before the shell and wizard components mount
+
+## Verification
+
+### Build Verification
+✅ TypeScript type checking passed: `npm run typecheck`
+✅ Production build completed successfully: `npm run build`
+✅ No TypeScript errors or linting issues introduced
+
+### What Analytics Will Track
+Once deployed to Vercel:
+- Automatic page view tracking
+- User sessions and visitor metrics
+- Performance data (Web Vitals)
+- Custom events (if added later)
+
+## Next Steps for the User
+
+1. **Deploy to Vercel**: The analytics will only start collecting data after deployment
+2. **Enable in Dashboard**: Navigate to your Vercel project dashboard → Analytics → Enable
+3. **Verify Installation**: After deployment, check the browser's Network tab for requests to the analytics endpoint
+4. **View Data**: Analytics data will appear in the Vercel dashboard within a few minutes of deployment
+
+## Notes
+
+- The implementation uses the `inject()` function which is the recommended approach for vanilla JavaScript/TypeScript projects
+- Analytics respects user privacy and complies with privacy regulations
+- The injected script automatically handles page view tracking for single-page applications
+- No additional configuration is required for basic analytics functionality
+- The package size impact is minimal (~76 packages added, but the runtime bundle is optimized)

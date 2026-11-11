@@ -4,6 +4,7 @@
 // zero bytes of user data uploaded, no external requests during
 // detection (after the initial Pyodide + wheel downloads).
 
+import { inject } from "@vercel/analytics";
 import { mountShell } from "./shell";
 import { mountWizard } from "./wizard";
 import type { WorkerRequest, WorkerResponse, DetectionResult } from "./types";
@@ -12,6 +13,9 @@ import { BUILTIN_RULESETS, DEMO_CURVED_RULESET, yamlToBytes, type Ruleset } from
 import { initTheme, toggleTheme, onThemeChange, getTheme, type Theme } from "./theme";
 import { initLang, getLang, onLangChange, t } from "./i18n";
 import "./style.css";
+
+// Initialize Vercel Web Analytics
+inject();
 
 // Resolve + apply the active theme BEFORE the UI mounts so the first paint is
 // already correct (no dark→light flash). Stored override wins; else OS pref.
